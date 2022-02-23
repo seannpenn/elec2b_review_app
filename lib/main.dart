@@ -31,10 +31,13 @@ class SafeCrackerView extends StatefulWidget {
 
 class _SafeCrackerViewState extends State<SafeCrackerView> {
   List<int> values = [0, 0, 0];
+  String feedback = "";
+  String combination = "451";
+  bool isUnlocked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.lightGreen,
       appBar: AppBar(
         title: const Text("Safe Cracker"),
       ),
@@ -42,9 +45,15 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(true ? CupertinoIcons.lock_open_fill:CupertinoIcons.lock_fill, size:128, color: Colors.yellowAccent,),
+            Icon(
+              isUnlocked
+                  ? CupertinoIcons.lock_open_fill
+                  : CupertinoIcons.lock_fill,
+              size: 128,
+              color: isUnlocked? Colors.greenAccent: Colors.redAccent,
+            ),
             Container(
-              margin: const EdgeInsets.only(top:32),
+              margin: const EdgeInsets.only(top: 32),
               height: 140,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -66,14 +75,36 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical:48),
+                margin: const EdgeInsets.only(top: 0,bottom: 15),
+                child: TextButton(
+                  onPressed: () {
+                    resetNumbers(values);
+                  },
+                  child: const Text(
+                    "reset",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )),
+            if (feedback.isNotEmpty) Text(feedback),
+            Container(
+              margin: const EdgeInsets.only(top:48),
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    unlockSafe();
+                  },
                   child: Container(
                       color: Colors.greenAccent,
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(25),
                       child: const Text("Open the safe"))),
             ),
+            TextButton(
+                onPressed: () {
+                  lockSafe(values);
+                },
+                child: Container(
+                    color: Colors.redAccent,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Lock safe"))),
             // const Text("This is the total of all the values"),
             // GestureDetector(
             //   onTap: () {
@@ -91,6 +122,55 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  unlockSafe() {
+    if (checkCombination()) {
+      setState(() {
+        isUnlocked = true;
+        feedback = "You unlocked the safe";
+      });
+    } else {
+      setState(() {
+        isUnlocked = false;
+        feedback = "Wrong combination, try again";
+      });
+    }
+  }
+
+  lockSafe(List<int> val) {
+    setState(() {
+      for (int i = 0; i < values.length; i++){
+        values[i] = 0;
+      }
+      isUnlocked = false;
+      feedback = "Safe locked";
+    });
+    
+  }
+
+  resetNumbers(List<int> val){
+    setState(() {
+      for (int i = 0; i < values.length; i++){
+        values[i] = 0;
+      }
+    });
+  }
+
+  bool checkCombination() {
+    String theCurrentValue = convertValuesToComparableString(values);
+    bool isUnlocked = (theCurrentValue == combination);
+    // print(convertValuesToComparableString(values));
+    print(isUnlocked);
+    return isUnlocked;
+  }
+}
+
+String convertValuesToComparableString(List<int> val) {
+  String temp = "";
+  for (int v in val) {
+    temp += "$v";
+  }
+  return temp;
 }
 
 int sumofAllValues(List<int> list) {
