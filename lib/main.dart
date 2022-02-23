@@ -54,7 +54,7 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 32),
-              height: 140,
+              height: 120,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -64,18 +64,24 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
                         onIncrement: () {
                           setState(() {
                             values[i]++;
+                            if(values[i] > 9) {
+                              values[i] = 9;
+                            }
                           });
                         },
                         onDecrement: () {
                           setState(() {
                             values[i]--;
+                            if(values[i] < 0){
+                              values[i] = 0;
+                            }
                           });
                         }),
                 ],
               ),
             ),
             Container(
-                margin: const EdgeInsets.only(top: 0,bottom: 15),
+                margin: const EdgeInsets.only(top: 0,bottom: 30),
                 child: TextButton(
                   onPressed: () {
                     resetNumbers(values);
@@ -102,6 +108,7 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
                   lockSafe(values);
                 },
                 child: Container(
+                    margin: const EdgeInsets.only(top:20),
                     color: Colors.redAccent,
                     padding: const EdgeInsets.all(10),
                     child: const Text("Lock safe"))),
@@ -126,6 +133,7 @@ class _SafeCrackerViewState extends State<SafeCrackerView> {
   unlockSafe() {
     if (checkCombination()) {
       setState(() {
+        resetNumbers(values);
         isUnlocked = true;
         feedback = "You unlocked the safe";
       });
