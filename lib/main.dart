@@ -1,6 +1,7 @@
 import 'package:elec2b_review/safe_cracker_widgets/safe_dial.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:elec2b_review/screens/start_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const SafeCrackerView());
+        home: const StartScreen(),
+    );
   }
 }
 
